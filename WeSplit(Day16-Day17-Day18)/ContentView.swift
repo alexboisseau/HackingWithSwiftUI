@@ -71,6 +71,7 @@ struct ContentView: View {
                     Text(grandTotal, format: .currency(code: Locale.current.currencyCode ?? "USD"))
                 } header : {
                     Text("Total amount (amount and tip)")
+                        .foregroundColor(tipPercentage == 0 ? .red : .black)
                 }
 
             }
