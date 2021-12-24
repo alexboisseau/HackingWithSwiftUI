@@ -17,6 +17,7 @@ struct ContentView: View {
             List {
                 Section {
                     TextField("Enter your word", text: $newWord)
+                        .textInputAutocapitalization(.never)
                 }
                 
                 Section {
@@ -27,6 +28,16 @@ struct ContentView: View {
             }
         }
         .navigationTitle(rootWord)
+        .onSubmit(addNewWord)
+    }
+    
+    func addNewWord() {
+        let answer = newWord.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        guard answer.count > 0 else { return }
+        
+        usedWords.insert(answer, at: 0)
+        newWord = ""
     }
 }
 
