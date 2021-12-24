@@ -29,9 +29,10 @@ struct ContentView: View {
                     }
                 }
             }
+                .navigationTitle(rootWord)
+                .onSubmit(addNewWord)
+                .onAppear(perform: startGame)
         }
-        .navigationTitle(rootWord)
-        .onSubmit(addNewWord)
     }
     
     func addNewWord() {
@@ -44,6 +45,29 @@ struct ContentView: View {
         }
         
         newWord = ""
+    }
+    
+    func startGame() {
+        // 1. Find the url for our start.txt file in our app bundle.
+        if let fileURL = Bundle.main.url(forResource: "start", withExtension: ".txt") {
+            
+            // 2. Load the content of the file inside a string
+            if let fileContent = try? String(contentsOf: fileURL) {
+                
+                // 3. Split the content of the file inside an array
+                let words = fileContent.components(separatedBy: "\n")
+                
+                // 4. Get a random element from this one
+                rootWord = words.randomElement() ?? "silkworm"
+                
+                // Let's go ! Everything looks great
+                print(rootWord)
+                print("End of this function")
+                return
+            }
+        }
+        
+        fatalError("Could not load start.txt from bundle.")
     }
 }
 
