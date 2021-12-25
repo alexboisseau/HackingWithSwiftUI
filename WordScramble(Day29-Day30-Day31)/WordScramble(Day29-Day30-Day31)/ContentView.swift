@@ -50,7 +50,16 @@ struct ContentView: View {
         guard answer.count > 0 else {
             wordError(title: "Invalid input", message: "Word must contains at least one caracter")
             return
-            
+        }
+        
+        guard answer == rootWord else {
+            wordError(title: "Invalid input", message: "Word should not be the same that the root word !")
+            return
+        }
+        
+        guard isMoreThanThreeLetters(word: answer) else {
+            wordError(title: "Invalid input", message: "Word must have more than three letters")
+            return
         }
         
         guard isOriginal(word: answer) else {
@@ -103,6 +112,7 @@ struct ContentView: View {
     }
     
     func isPossible(word: String) -> Bool {
+        
         for letter in word {
             if (!rootWord.contains(String(letter))){
                 return false
@@ -110,6 +120,10 @@ struct ContentView: View {
         }
         
         return true
+    }
+    
+    func isMoreThanThreeLetters(word: String) -> Bool {
+        return word.count > 3
     }
     
     func isReal(word: String) -> Bool {
