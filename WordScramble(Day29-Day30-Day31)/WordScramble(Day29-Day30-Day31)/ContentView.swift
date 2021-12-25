@@ -14,6 +14,7 @@ struct ContentView: View {
     @State private var errorTitle = ""
     @State private var errorMessage = ""
     @State private var showingError = false
+    @State private var currentScore = 0
     
     var body: some View {
         NavigationView {
@@ -21,6 +22,10 @@ struct ContentView: View {
                 Section {
                     TextField("Enter your word", text: $newWord)
                         .textInputAutocapitalization(.never)
+                }
+                
+                Section("Score") {
+                    Text("Your score is : \(currentScore)")
                 }
                 
                 Section {
@@ -43,7 +48,7 @@ struct ContentView: View {
                 .toolbar {
                     ToolbarItem(placement: .automatic) {
                         Button("New Word") {
-                            print("Pressed")
+                            startGame()
                         }
                     }
                 }
@@ -88,6 +93,8 @@ struct ContentView: View {
             usedWords.insert(answer, at: 0)
         }
         
+        currentScore += answer.count
+        
         newWord = ""
     }
     
@@ -104,8 +111,9 @@ struct ContentView: View {
                 // 4. Get a random element from this one
                 rootWord = words.randomElement() ?? "silkworm"
                 
-                // 5. Clear the usedWords array
+                // 5. Clear the usedWords array and set the score to 0
                 usedWords.removeAll()
+                currentScore = 0
                 
                 // Let's go ! Everything looks great
                 return
