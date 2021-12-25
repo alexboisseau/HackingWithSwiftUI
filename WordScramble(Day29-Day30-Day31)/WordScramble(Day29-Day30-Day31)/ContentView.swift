@@ -40,6 +40,13 @@ struct ContentView: View {
                 } message: {
                     Text(errorMessage)
                 }
+                .toolbar {
+                    ToolbarItem(placement: .automatic) {
+                        Button("New Word") {
+                            print("Pressed")
+                        }
+                    }
+                }
         }
     }
     
@@ -52,7 +59,7 @@ struct ContentView: View {
             return
         }
         
-        guard answer == rootWord else {
+        guard answer != rootWord else {
             wordError(title: "Invalid input", message: "Word should not be the same that the root word !")
             return
         }
@@ -97,9 +104,10 @@ struct ContentView: View {
                 // 4. Get a random element from this one
                 rootWord = words.randomElement() ?? "silkworm"
                 
+                // 5. Clear the usedWords array
+                usedWords.removeAll()
+                
                 // Let's go ! Everything looks great
-                print(rootWord)
-                print("End of this function")
                 return
             }
         }
