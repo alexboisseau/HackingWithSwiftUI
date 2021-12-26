@@ -129,8 +129,12 @@ struct ContentView: View {
     
     func isPossible(word: String) -> Bool {
         
+        var tempWord = rootWord
+        
         for letter in word {
-            if (!rootWord.contains(String(letter))){
+            if let index = tempWord.firstIndex(of: letter) {
+                tempWord.remove(at: index)
+            } else {
                 return false
             }
         }
