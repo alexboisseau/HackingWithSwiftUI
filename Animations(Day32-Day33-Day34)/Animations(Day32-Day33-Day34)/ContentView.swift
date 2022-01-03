@@ -7,32 +7,45 @@
 
 import SwiftUI
 
+struct CornerRotateModifier: ViewModifier {
+    let amount: Double
+    let anchor: UnitPoint
+    
+    func body(content: Content) -> some View {
+        content
+            .rotationEffect(.degrees(amount), anchor: anchor)
+    }
+}
+
+extension AnyTransition {
+    static var pivot: AnyTransition {
+        .modifier(active: CornerRotateModifier(amount: -90, anchor: .topLeading), identity: CornerRotateModifier(amount: 0, anchor: .topLeading))
+    }
+}
+
 struct ContentView: View {
-    let letters = Array("Hello SwiftUI")
-    @State private var dragAmount = CGSize.zero
-    @State private var enabled = false
+    @State private var isShowingRectangle = false
     
     var body: some View {
-        HStack(spacing: 0) {
-            ForEach(0..<letters.count) { index in
-                Text(String(letters[index]))
-                    .padding(5)
-                    .font(.title)
-                    .background(enabled ? .blue : .red)
-                    .offset(dragAmount)
-                    .animation(.default.delay(Double(index) / 20), value: dragAmount)
+        ZStack {
+            Rectangle()
+                .fill(.blue)
+                .frame(width: 200, height: 200)
+                
+            if isShowingRectangle {
+                Rectangle()
+                    .fill(.red)
+                    .frame(width: 200, height: 200)
+                    .transition(.pivot)
             }
         }
-        .gesture(
-            DragGesture()
-                .onChanged {
-                    dragAmount = $0.translation
-                }
-                .onEnded { _ in
-                    dragAmount = .zero
-                    enabled.toggle()
-                }
-        )
+        .onTapGesture {
+            withAnimation {
+                print(isShowingRectangle)
+                isShowingRectangle.toggle()
+                print(isShowingRectangle)
+            }
+        }
     }
 }
 
