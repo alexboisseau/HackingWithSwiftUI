@@ -39,6 +39,8 @@ struct ContentView: View {
     @State private var scoreTitle = ""
     @State private var userScore = 0
     @State private var questionNumber = 1
+    @State private var flagAnimationAmount: Double = 0
+    @State private var userResponse = 0
     
     var body: some View {
         ZStack {
@@ -79,9 +81,16 @@ struct ContentView: View {
                     ForEach(0..<3) { number in
                         Button {
                             flagTapped(number)
+                            
+                            // Used for the animation
+                            userResponse = number
+                            withAnimation(.easeInOut(duration: 0.5)) {
+                                flagAnimationAmount = 360
+                            }
                         } label: {
                             FlagImage(image: countries[number])
                         }
+                        .rotation3DEffect(.degrees(number == userResponse ? flagAnimationAmount : 0), axis: (x: 0, y: 1, z: 0))
                     }
                 }
                 .frame(maxWidth: .infinity)
@@ -121,12 +130,14 @@ struct ContentView: View {
         }
         
         showingScore = true
+        
     }
     
     func askQuestion() {
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
         questionNumber += 1
+        flagAnimationAmount = 0
     }
     
     func newGame() {
