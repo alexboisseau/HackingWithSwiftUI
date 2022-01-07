@@ -7,6 +7,10 @@
 
 import SwiftUI
 
+enum AnswerIndication: String {
+    case Start = "Let's start the game ! 🎲", Correct = "Good job ! ✅", NotCorrect = "Not correct ! ❌"
+}
+
 struct Question {
     var question: String
     var propositions: [String]
@@ -49,6 +53,7 @@ struct ContentView: View {
     @State private var questionNumber = 1
     @State private var question = Question(table: 5)
     @State private var score = 0
+    @State private var answerIndication: AnswerIndication = .Start
     @State private var showingScore = false
     
     var body: some View {
@@ -57,9 +62,9 @@ struct ContentView: View {
                 SettingsView(multiplicationTable: $multiplicationTable, howManyQuestions: $howManyQuestions, question: $question)
                 Spacer()
                 
-                QuestionView(question: $question, questionNumber: $questionNumber, table: $multiplicationTable, score: $score, showingScore: $showingScore, howManyQuestions: howManyQuestions)
+                QuestionView(question: $question, questionNumber: $questionNumber, table: $multiplicationTable, score: $score, showingScore: $showingScore, answerIndication: $answerIndication , howManyQuestions: howManyQuestions)
                 VStack {
-                    Text("Good response !")
+                    Text("\(answerIndication.rawValue)")
                     Text("Score : \(score)")
                 }
                 .padding(.top, 10)
@@ -109,6 +114,7 @@ struct QuestionView: View {
     @Binding var table: Int
     @Binding var score: Int
     @Binding var showingScore: Bool
+    @Binding var answerIndication: AnswerIndication
     
     var howManyQuestions: Int
     
@@ -151,10 +157,14 @@ struct QuestionView: View {
                 
         if userResponse == question.solution {
             score += 1
+            answerIndication = .Correct
+        } else {
+            answerIndication = .NotCorrect
         }
         
         if questionNumber == howManyQuestions {
             showingScore = true
+            answerIndication = .Start
         } else {
             questionNumber += 1
             question = Question(table: table)
