@@ -18,13 +18,21 @@ struct Question {
         let answerIndex = Int.random(in: 0...2)
         
         var propositionsTemp = [String]()
+        var usedValue = [Int]()
         
         for i in 0...2 {
             
             if i == answerIndex {
                 propositionsTemp.append("\(answer)")
             } else {
-                propositionsTemp.append("\(table * Int.random(in: 1...12))")
+                var value = table * Int.random(in: 1...12)
+                
+                while usedValue.contains(value) || value == answer {
+                    value = table * Int.random(in: 1...12)
+                }
+                
+                usedValue.append(value)
+                propositionsTemp.append("\(value)")
             }
 
         }
@@ -105,7 +113,6 @@ struct QuestionView: View {
     var howManyQuestions: Int
     
     @State private var userResponse = -1
-    
     @State private var scale: CGFloat = 1
     @State private var rotationDegree = 0.0
     
