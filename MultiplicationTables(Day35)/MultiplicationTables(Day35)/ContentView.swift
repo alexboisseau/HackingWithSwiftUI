@@ -59,7 +59,7 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             VStack{
-                SettingsView(multiplicationTable: $multiplicationTable, howManyQuestions: $howManyQuestions, question: $question)
+                SettingsView(multiplicationTable: $multiplicationTable, howManyQuestions: $howManyQuestions, question: $question, score: $score, questionNumber: $questionNumber)
                 Spacer()
                 
                 QuestionView(question: $question, questionNumber: $questionNumber, table: $multiplicationTable, score: $score, showingScore: $showingScore, answerIndication: $answerIndication , howManyQuestions: howManyQuestions)
@@ -97,14 +97,22 @@ struct SettingsView: View {
     @Binding var multiplicationTable: Int
     @Binding var howManyQuestions: Int
     @Binding var question: Question
+    @Binding var score: Int
+    @Binding var questionNumber: Int
     
     var body: some View {
         Stepper("Choose a multiplication table : \(multiplicationTable)", value: $multiplicationTable, in: 1...12)
             .padding(.top, 10)
             .onChange(of: multiplicationTable) { newTable in
                 question = Question(table: newTable)
+                questionNumber = 0
+                score = 0
             }
         Stepper("How many questions you want : \(howManyQuestions)", value: $howManyQuestions, in: 5...20, step: 5)
+            .onChange(of: howManyQuestions) { _ in
+                questionNumber = 0
+                score = 0
+            }
     }
 }
 
