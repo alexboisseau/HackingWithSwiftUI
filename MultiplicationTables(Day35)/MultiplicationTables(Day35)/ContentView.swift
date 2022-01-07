@@ -115,6 +115,7 @@ struct QuestionView: View {
     @State private var userResponse = -1
     @State private var scale: CGFloat = 1
     @State private var rotationDegree = 0.0
+    @State private var opacity = 1.0
     
     var body: some View {
         Text("\(question.question)")
@@ -126,6 +127,7 @@ struct QuestionView: View {
                         userResponse = index
                         scale += 1
                         rotationDegree = 360
+                        opacity = 0.6
                     }
                     
                     DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
@@ -137,6 +139,7 @@ struct QuestionView: View {
                 .padding(.vertical, 12)
                 .background(userResponse == index ? userResponse == question.solution ? .green : .red : .blue)
                 .cornerRadius(5)
+                .opacity(userResponse == index ? 1 : opacity)
                 .rotation3DEffect(.degrees(userResponse == index ? rotationDegree : 0), axis: (x: 1, y: 1, z: 1))
                 .scaleEffect(userResponse == index ? scale : 1)
                 .zIndex(userResponse == index ? 100 : 1)
@@ -157,6 +160,7 @@ struct QuestionView: View {
             question = Question(table: table)
         }
         
+        opacity = 1
         scale = 1
         userResponse = -1
     }
